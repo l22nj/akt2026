@@ -10,7 +10,13 @@ public class Exercise3 {
      * @return arvude summa, antud näide puhul 50.
      */
     public static int eval(String str) {
-        throw new UnsupportedOperationException();
+        String[] arvudSõnedena = str.split("\\+");
+        int summa = 0;
+        for (String arvSõnena : arvudSõnedena) {
+            int arv = Integer.parseInt(arvSõnena.strip());
+            summa += arv;
+        }
+        return summa;
     }
 
     /**
@@ -21,7 +27,13 @@ public class Exercise3 {
      * @return listile vastav map nimedest arvudesse.
      */
     public static Map<String, Integer> createMap(List<String> list) {
-        throw new UnsupportedOperationException();
+        Map<String, Integer> tulemus = new HashMap<>();
+        for (int i = 0; i < list.size(); ++i) {
+            if (i % 2 == 0) {
+                tulemus.put(list.get(i), Integer.parseInt(list.get(i+1)));
+            }
+        }
+        return tulemus;
     }
 
     static void main() {
