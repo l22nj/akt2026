@@ -8,33 +8,33 @@ import java.util.List;
 public class RegexExercise {
 
     // sõnad "kalad" või "jalad".
-    public static final String RE1 = null;
+    public static final String RE1 = "kalad|jalad";
 
     // Viietähelised sõned, mis lõppevad tähtedega "alad".
-    public static final String RE2 = null;
+    public static final String RE2 = ".alad";
 
     // color ja colour
-    public static final String RE3 = null;
+    public static final String RE3 = "colo(u|)r";
 
     // jaha, jahaaaaaaaaa!
-    public static final String RE4 = null;
+    public static final String RE4 = "j(a+)h(a+)";
 
     // binaarsõned
-    public static final String RE5 = null;
+    public static final String RE5 = "^[01]*$";
 
     // eelviimane täht on "a"
-    public static final String RE6 = null;
+    public static final String RE6 = "^[ab]*a[ab]$";
 
     // tagasiviited
-    public static final String RE7 = null;
+    public static final String RE7 = "^(..)\\1$";
 
     // nimede asendamine: regulaaravaldis
-    public static final String RE8 = null;
+    public static final String RE8 = "([A-Z][a-z]+)\s([A-Z][a-z]+)";
     // millega asendada? (Util.replace'i teine argument)
-    public static final String RP8 = null;
+    public static final String RP8 = "$2, $1";
 
     // Eemaldada sulud!
-    public static final String RE9 = null;
+    public static final String RE9 = " \\(.*?\\)";
     // Siin asendatakse regexiga sobituvad juppid tühja sõnega.
 
 
