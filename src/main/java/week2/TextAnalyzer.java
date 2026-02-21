@@ -1,8 +1,13 @@
 package week2;
 
-import java.util.Map;
+import week2.intro.RegexUtils;
+
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TextAnalyzer {
+    String text;
 
     // Sõned, mis lõppevad tähtedega "ed" või mõni täht veel.
     // (Ülesanne lehel on pikemalt seletatud!)
@@ -15,21 +20,34 @@ public class TextAnalyzer {
     public static final String RE3 = "^(.)((.*\\1)|)$";
 
     // Sõned, mis ülesanne nimede tingimustele vastavad.
-    public static final String NAME = "[A-Z][a-z]* [A-Z][a-z]*";
+    public static final String NAME = "([A-Z][a-z]* [A-Z][a-z]*)";
 
     // Sõned, mis ülesanne numbri tingimustele vastavad.
-    public static final String NUMBER = "^((\\d{3,4}(-|\\s)\\d{3,4})|\\d{4,8})$";
+    public static final String NUMBER = "((\\d{3,4}(-|\\s)\\d{3,4})|\\d{4,8})";
+
+    static String saaPuhasNumber(String nr) {
+        return nr.replaceAll("-|\\s", "");
+    }
 
     public TextAnalyzer(String text) {
-        // Kas siin peaks ka midagi tegema?
+        this.text = text;
     }
 
     public Map<String, String> getPhoneNumbers() {
-        throw new UnsupportedOperationException();
+        Pattern pattern = Pattern.compile(NAME + ".*?" + NUMBER);
+        Matcher matcher = pattern.matcher(text);
+        Map<String, String> tulemus = new HashMap<>();
+        if (!matcher.find()) return tulemus;
+        do {
+            String[] paar = matcher.group().replaceAll(pattern.pattern(),"$1;$2").split(";");
+            tulemus.put(paar[0], saaPuhasNumber(paar[1]));
+        } while (matcher.find(matcher.start()+1));
+        return tulemus;
     }
 
+    // Isikukoodi ei tunne ära
     public String anonymize() {
-        throw new UnsupportedOperationException();
+        return text.replaceAll(NAME, "<nimi>").replaceAll(NUMBER, "<telefoninumber>");
     }
 
 
