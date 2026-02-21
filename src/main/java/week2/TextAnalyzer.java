@@ -6,19 +6,19 @@ public class TextAnalyzer {
 
     // Sõned, mis lõppevad tähtedega "ed" või mõni täht veel.
     // (Ülesanne lehel on pikemalt seletatud!)
-    public static final String RE1 = null;
+    public static final String RE1 = ".*(ed)(.|)$";
 
     // Paaritu pikkusega sõned.
-    public static final String RE2 = null;
+    public static final String RE2 = "^(..)*.$";
 
     // Sõned, mille esimene ja viimane täht on sama!
-    public static final String RE3 = null;
+    public static final String RE3 = "^(.)((.*\\1)|)$";
 
     // Sõned, mis ülesanne nimede tingimustele vastavad.
-    public static final String NAME = null;
+    public static final String NAME = "[A-Z][a-z]* [A-Z][a-z]*";
 
     // Sõned, mis ülesanne numbri tingimustele vastavad.
-    public static final String NUMBER = null;
+    public static final String NUMBER = "^((\\d{3,4}(-|\\s)\\d{3,4})|\\d{4,8})$";
 
     public TextAnalyzer(String text) {
         // Kas siin peaks ka midagi tegema?
