@@ -14,10 +14,4 @@ gen
 *.dot
 *.swp
 *.class
-
-# week3
-graphs
-# week9
-cmas
-# week10
-aktk-out
+/update.txt
