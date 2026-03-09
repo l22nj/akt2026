@@ -34,7 +34,7 @@ public class TextAnalyzer {
     }
 
     public Map<String, String> getPhoneNumbers() {
-        Pattern pattern = Pattern.compile(NAME + ".*?" + NUMBER);
+        Pattern pattern = Pattern.compile(NAME + ".*?" + "[^\\d]" + NUMBER + "[^\\d]");
         Matcher matcher = pattern.matcher(text);
         Map<String, String> tulemus = new HashMap<>();
         if (!matcher.find()) return tulemus;
