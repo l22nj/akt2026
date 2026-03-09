@@ -4,56 +4,130 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.*;
 
+class Transition {
+    int from;
+    Character l;
+    int to;
+
+    Transition(int fromState, Character label, int toState) {
+        from = fromState;
+        l = label;
+        to = toState;
+    }
+}
+
 public class FiniteAutomaton extends AbstractAutomaton {
+    int startState;
+    Set<Integer> states = new HashSet<>();
+    Set<Integer> acceptingStates = new HashSet<>();
+    Set<Transition> trs = new HashSet<>();
 
     @Override
     public void addState(int state) {
-        throw new UnsupportedOperationException();
+        states.add(state);
     }
 
     @Override
     public void setStartState(int state) {
-        throw new UnsupportedOperationException();
+        if (!states.contains(state)) {
+            throw new IllegalArgumentException("startState saab valida ainult juba olemasolevate olekute hulgast");
+        }
+        startState = state;
     }
 
     @Override
     public void addAcceptingState(int state) {
-        throw new UnsupportedOperationException();
+        if (!states.contains(state)) {
+            throw new IllegalArgumentException("acceptingState saab valida ainult juba olemasolevate olekute hulgast");
+        }
+        acceptingStates.add(state);
     }
 
     @Override
     public void addTransition(int fromState, Character label, int toState) {
-        throw new UnsupportedOperationException();
+        if (!states.contains(fromState) || !states.contains(toState)) {
+            throw new IllegalArgumentException("ülemineku saab defineerida vaid juba olemasolevate olekute vahel");
+        }
+        trs.add(new Transition(fromState, label, toState));
     }
 
     @Override
     public Set<Integer> getStates() {
-        throw new UnsupportedOperationException();
+        return states;
     }
 
     @Override
     public Integer getStartState() {
-        throw new UnsupportedOperationException();
+        return startState;
     }
 
     @Override
     public Set<Integer> getAcceptingStates() {
-        throw new UnsupportedOperationException();
+        return acceptingStates;
     }
 
     @Override
     public Set<Character> getOutgoingLabels(int state) {
-        throw new UnsupportedOperationException();
+        if (!getStates().contains(state)) {
+            throw new IllegalArgumentException("etteantud olekut pole automaadis");
+        }
+        Set<Character> outgoing = new HashSet<>();
+        for (Transition tr : trs) {
+            if (tr.from == state) {
+                outgoing.add(tr.l);
+            }
+        }
+        return outgoing;
     }
 
     @Override
     public Set<Integer> getDestinations(int state, Character label) {
-        throw new UnsupportedOperationException();
+        if (!getStates().contains(state)) {
+            throw new IllegalArgumentException("etteantud olekut pole automaadis");
+        }
+        Set<Integer> destinations = new HashSet<>();
+        if (label == null) destinations.add(state);
+        for (Transition tr : trs) {
+            if (label != null && label.equals(tr.l) ||
+                label == null && tr.l == null) {
+                destinations.add(tr.to);
+            }
+        }
+        return destinations;
     }
 
     @Override
     public boolean accepts(String input) {
-        throw new UnsupportedOperationException();
+        // Teeb hulga startState-ist
+        Set<Integer> algus = new HashSet<>();
+        algus.add(getStartState());
+
+        Set<Integer> currentStates = leiaEpsSulund(algus);
+        for (int i = 0; i < input.length(); ++i) {
+            Set<Integer> nextStates = new HashSet<>();
+            for (Integer state : currentStates) {
+                nextStates.addAll(leiaEpsSulund(getDestinations(state, input.charAt(i))));
+            }
+            currentStates = nextStates;
+        }
+        currentStates.retainAll(getAcceptingStates());
+        return !currentStates.isEmpty();
+    }
+
+    Set<Integer> leiaEpsSulund(Set<Integer> states) {
+        Deque<Integer> pinu = new ArrayDeque<>();
+        for (Integer state : states) {
+            pinu.push(state);
+        }
+        while (!pinu.isEmpty()) {
+            for (Integer state : getDestinations(pinu.pop(), null)) {
+                if (!states.contains(state)) {
+                    pinu.push(state);
+                    states.add(state);
+                }
+            }
+        }
+        return states;
     }
 
     /**
