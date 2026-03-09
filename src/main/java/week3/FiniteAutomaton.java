@@ -89,10 +89,7 @@ public class FiniteAutomaton extends AbstractAutomaton {
 
     @Override
     public boolean accepts(String input) {
-        Set<Integer> algus = new HashSet<>();
-        algus.add(getStartState());
-
-        Set<Integer> currentStates = leiaEpsSulund(algus);
+        Set<Integer> currentStates = leiaEpsSulund(Set.of(getStartState()));
         Set<Integer> nextStates = new HashSet<>();
 
         for (int i = 0; i < input.length(); ++i) {
@@ -108,19 +105,20 @@ public class FiniteAutomaton extends AbstractAutomaton {
     }
 
     Set<Integer> leiaEpsSulund(Set<Integer> states) {
+        Set<Integer> sulund = new HashSet<>(states);
         Deque<Integer> pinu = new ArrayDeque<>();
         for (Integer state : states) {
             pinu.push(state);
         }
         while (!pinu.isEmpty()) {
             for (Integer state : getDestinations(pinu.pop(), null)) {
-                if (!states.contains(state)) {
+                if (!sulund.contains(state)) {
                     pinu.push(state);
-                    states.add(state);
+                    sulund.add(state);
                 }
             }
         }
-        return states;
+        return sulund;
     }
 
     /**
