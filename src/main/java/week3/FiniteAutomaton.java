@@ -4,7 +4,17 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.*;
 
-record Transition(int from, Character l, int to) {}
+class Transition {
+    int from;
+    Character l;
+    int to;
+
+    Transition(int fromState, Character label, int toState) {
+        from = fromState;
+        l = label;
+        to = toState;
+    }
+}
 
 public class FiniteAutomaton extends AbstractAutomaton {
     int startState;
@@ -63,8 +73,8 @@ public class FiniteAutomaton extends AbstractAutomaton {
         }
         Set<Character> outgoing = new HashSet<>();
         for (Transition tr : trs) {
-            if (tr.from() == state) {
-                outgoing.add(tr.l());
+            if (tr.from == state) {
+                outgoing.add(tr.l);
             }
         }
         return outgoing;
@@ -78,10 +88,9 @@ public class FiniteAutomaton extends AbstractAutomaton {
         Set<Integer> destinations = new HashSet<>();
         if (label == null) destinations.add(state);
         for (Transition tr : trs) {
-            if (!(tr.from() == state)) continue;
-            if (label != null && label.equals(tr.l()) ||
-                    label == null && tr.l() == null) {
-                destinations.add(tr.to());
+            if (label != null && label.equals(tr.l) ||
+                label == null && tr.l == null) {
+                destinations.add(tr.to);
             }
         }
         return destinations;
@@ -89,36 +98,36 @@ public class FiniteAutomaton extends AbstractAutomaton {
 
     @Override
     public boolean accepts(String input) {
-        Set<Integer> currentStates = leiaEpsSulund(Set.of(getStartState()));
-        Set<Integer> nextStates = new HashSet<>();
+        // Teeb hulga startState-ist
+        Set<Integer> algus = new HashSet<>();
+        algus.add(getStartState());
 
+        Set<Integer> currentStates = leiaEpsSulund(algus);
         for (int i = 0; i < input.length(); ++i) {
-            nextStates.clear();
+            Set<Integer> nextStates = new HashSet<>();
             for (Integer state : currentStates) {
                 nextStates.addAll(leiaEpsSulund(getDestinations(state, input.charAt(i))));
             }
-            currentStates.clear();
-            currentStates.addAll(nextStates);
+            currentStates = nextStates;
         }
         currentStates.retainAll(getAcceptingStates());
         return !currentStates.isEmpty();
     }
 
     Set<Integer> leiaEpsSulund(Set<Integer> states) {
-        Set<Integer> sulund = new HashSet<>(states);
         Deque<Integer> pinu = new ArrayDeque<>();
         for (Integer state : states) {
             pinu.push(state);
         }
         while (!pinu.isEmpty()) {
             for (Integer state : getDestinations(pinu.pop(), null)) {
-                if (!sulund.contains(state)) {
+                if (!states.contains(state)) {
                     pinu.push(state);
-                    sulund.add(state);
+                    states.add(state);
                 }
             }
         }
-        return sulund;
+        return states;
     }
 
     /**
