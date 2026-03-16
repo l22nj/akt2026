@@ -43,7 +43,7 @@ public class FiniteAutomaton extends AbstractAutomaton {
 
     @Override
     public Set<Integer> getStates() {
-        return states;
+        return Set.copyOf(states);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class FiniteAutomaton extends AbstractAutomaton {
 
     @Override
     public Set<Integer> getAcceptingStates() {
-        return acceptingStates;
+        return Set.copyOf(acceptingStates);
     }
 
     @Override
