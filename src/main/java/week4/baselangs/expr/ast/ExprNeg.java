@@ -9,6 +9,6 @@ public record ExprNeg(ExprNode expr) implements ExprNode {
 
     @Override
     public int eval() {
-        return 0;
+        return 0 - expr.eval();
     }
 }

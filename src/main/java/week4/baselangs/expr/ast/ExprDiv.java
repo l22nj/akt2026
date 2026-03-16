@@ -9,6 +9,6 @@ public record ExprDiv(ExprNode numerator, ExprNode denominator) implements ExprN
 
     @Override
     public int eval() {
-        return 0;
+        return numerator.eval() / denominator.eval();
     }
 }

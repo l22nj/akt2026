@@ -9,6 +9,6 @@ public record ExprAdd(ExprNode left, ExprNode right) implements ExprNode {
 
     @Override
     public int eval() {
-        return 0;
+        return left.eval() + right.eval();
     }
 }

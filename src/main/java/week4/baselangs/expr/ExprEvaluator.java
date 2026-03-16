@@ -1,5 +1,6 @@
 package week4.baselangs.expr;
 
+import com.google.common.collect.Sets;
 import week4.baselangs.expr.ast.*;
 
 import java.util.HashSet;
@@ -27,7 +28,7 @@ public class ExprEvaluator {
         } else if (node instanceof ExprAdd add) {
             return evalInstanceof(add.left()) + evalInstanceof(add.right());
         } else if (node instanceof ExprDiv div) {
-            return 0;
+            return evalInstanceof(div.numerator()) / evalInstanceof(div.denominator());
         } else {
             // Siia ei peaks kunagi jõudma (v.a. null), aga kompilaator seda ei tea.
             throw new IllegalArgumentException();
@@ -51,7 +52,8 @@ public class ExprEvaluator {
             case ExprNum(int value) -> value;
             case ExprNeg(ExprNode expr) -> -eval(expr);
             case ExprAdd(ExprNode left, ExprNode right) -> eval(left) + eval(right);
-            case ExprDiv(ExprNode numerator, ExprNode denominator) -> 0;
+            case ExprDiv(ExprNode numerator, ExprNode denominator) -> eval(numerator) / eval(denominator);
+            case null -> throw new IllegalArgumentException("");
             // Kuna ExprNode on kinnine, siis kompilaator teab, et default juhtu pole vaja.
         };
     }
@@ -63,7 +65,13 @@ public class ExprEvaluator {
      * Kogub kokku kõik tippudes esinevad arvud.
      */
     public static Set<Integer> getAllValues(ExprNode node) {
-        throw new UnsupportedOperationException();
+        return switch (node) {
+            case ExprNum exprNum -> Set.of(exprNum.value());
+            case ExprNeg exprNeg -> getAllValues(exprNeg.expr());
+            case ExprAdd exprAdd -> Sets.union(getAllValues(exprAdd.left()), getAllValues(exprAdd.right()));
+            case ExprDiv exprDiv -> Sets.union(getAllValues(exprDiv.numerator()), getAllValues(exprDiv.denominator()));
+            case null -> throw new IllegalArgumentException("");
+        };
     }
 
 

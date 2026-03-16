@@ -11,6 +11,6 @@ public record ExprNum(int value) implements ExprNode {
 
     @Override
     public int eval() {
-        return 0;
+        return value();
     }
 }
