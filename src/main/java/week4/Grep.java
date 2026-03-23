@@ -152,83 +152,24 @@ public class Grep {
     }
 
     private static FiniteAutomaton nihutaOlekuidRööbitusParem(FiniteAutomaton v, FiniteAutomaton p) {
-        FiniteAutomaton tulemus = new FiniteAutomaton();
-        int n = v.getStates().size();
-        for (int olek : p.getStates()) {
-            int uus_olek = olek > 0 ? n + olek - 1 : olek;
-            tulemus.addState(uus_olek);
-            for (Character süm : p.getOutgoingLabels(olek)) {
-                for (int siht : p.getDestinations(olek, süm)) {
-                    int uus_siht = siht > 0 ? n + siht - 1 : siht;
-                    tulemus.addState(uus_siht);
-                    tulemus.addTransition(uus_olek, süm, uus_siht);
-                }
-            }
-        }
-        tulemus.setStartState(0);
-        tulemus.addAcceptingState(-1);
-        return tulemus;
+        return null;
     }
 
     private static FiniteAutomaton nihutaOlekuidRööbitusVasak(FiniteAutomaton v, FiniteAutomaton p) {
-        FiniteAutomaton tulemus = new FiniteAutomaton();
-        for (int olek : v.getStates()) {
-            int uus_olek = olek;
-            tulemus.addState(uus_olek);
-            for (Character süm : v.getOutgoingLabels(olek)) {
-                for (int siht : v.getDestinations(olek, süm)) {
-                    int uus_siht = siht;
-                    tulemus.addState(uus_siht);
-                    tulemus.addTransition(uus_olek, süm, uus_siht);
-                }
-            }
-        }
-        tulemus.setStartState(0);
-        tulemus.addAcceptingState(-1);
-        return tulemus;
+        return null;
     }
 
     private static FiniteAutomaton nihutaOlekuidSummaParem(FiniteAutomaton v, FiniteAutomaton p) {
-        FiniteAutomaton tulemus = new FiniteAutomaton();
-        int n = v.getStates().size();
-        for (int olek : p.getStates()) {
-            int uus_olek = olek > -1 ? n - 1 + olek : -1;
-            tulemus.addState(uus_olek);
-            for (Character süm : p.getOutgoingLabels(olek)) {
-                for (int siht : p.getDestinations(olek, süm)) {
-                    int uus_siht = siht > -1 ? n - 1 + siht : -1;
-                    tulemus.addState(uus_siht);
-                    tulemus.addTransition(uus_olek, süm, uus_siht);
-                }
-            }
-        }
-        tulemus.setStartState(n-1);
-        tulemus.addAcceptingState(-1);
-        return tulemus;
+        return null;
     }
 
     private static FiniteAutomaton nihutaOlekuidSummaVasak(FiniteAutomaton v, FiniteAutomaton p) {
-        FiniteAutomaton tulemus = new FiniteAutomaton();
-        int n = v.getStates().size();
-        for (int olek : v.getStates()) {
-            int uus_olek = olek > -1 ? olek : n - 1;
-            tulemus.addState(uus_olek);
-            for (Character süm : v.getOutgoingLabels(olek)) {
-                for (int siht : v.getDestinations(olek, süm)) {
-                    int uus_siht = siht > -1 ? siht : n - 1;
-                    tulemus.addState(uus_siht);
-                    tulemus.addTransition(uus_olek, süm, uus_siht);
-                }
-            }
-        }
-        tulemus.setStartState(0);
-        tulemus.addAcceptingState(n-1);
-        return tulemus;
+        return null;
     }
 
     private static FiniteAutomaton normeeriOlekud(FiniteAutomaton automaat) {
         FiniteAutomaton tulemus = new FiniteAutomaton();
-        int n = automaat.getStates().size();
+        int n = tulemus.getStates().size();
 
         for (int olek : automaat.getStates()) {
             int uus_olek = olek > -1 ? olek + 1 : n;
