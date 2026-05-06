@@ -9,6 +9,7 @@ import week7.ast.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 
 public class AktkAst {
@@ -39,6 +40,60 @@ public class AktkAst {
 
     // Põhimeetod, mida tuleks implementeerida:
     private static Statement parseTreeToAst(ParseTree tree) {
-        throw new UnsupportedOperationException();
+        var visitor = new StatementVisitor().visit(tree);
+        return visitor;
+    }
+
+    static class StatementVisitor extends AktkBaseVisitor<Statement> {
+        private final ExpressionVisitor exprVisitor = new ExpressionVisitor();
+
+        @Override
+        public Statement visitProgram(ProgramContext ctx) {
+            return visit(ctx.statements());
+        }
+
+        @Override
+        public Statement visitStatements(StatementsContext ctx) {
+            var statements = new ArrayList<Statement>();
+            for (var statement : ctx.statement()) {
+                statements.add(visit(statement));
+            }
+            return new Block(statements);
+        }
+
+        @Override
+        public Statement visitBlock(BlockContext ctx) {
+            return visit(ctx.statements());
+        }
+
+        @Override
+        public Statement visitExprStatement(ExprStatementContext ctx) {
+            return new ExpressionStatement(exprVisitor.visit(ctx.expr()));
+        }
+    }
+
+    static class ExpressionVisitor extends AktkBaseVisitor<Expression> {
+        @Override
+        public Expression visitExpr(ExprContext ctx) {
+            return super.visitExpr(ctx);
+        }
+
+        @Override
+        public Expression visitIntLiteral(IntLiteralContext ctx) {
+            var value = Integer.parseInt(ctx.IntLiteral().getText());
+            return new IntegerLiteral(value);
+        }
+
+        @Override
+        public Expression visitStrLiteral(StrLiteralContext ctx) {
+            var value = ctx.StrLiteral().getText();
+            return new StringLiteral(value.substring(1, value.length() - 1));
+        }
+
+        @Override
+        public Expression visitVariable(VariableContext ctx) {
+            var name = ctx.Variable().getText();
+            return new Variable(name);
+        }
     }
 }

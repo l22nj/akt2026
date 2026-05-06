@@ -7,4 +7,16 @@ grammar SimpleArgList;
 // eeldame, et tühikuid ja tabulaatoreid võib olla igalpool suvaline arv.
 
 // Ära seda reeglit ümber nimeta, selle kaudu testitakse grammatikat
-init : 'implementeeri mind!' EOF;  // siit peab grammatika algama
+init : 'f(' arguments ')' EOF;  // siit peab grammatika algama
+
+arguments
+    : args
+    | 
+    ;
+
+args
+    : 'w' ',' args
+    | 'w'
+    ;
+
+WS: [ \t\r\n]+ -> skip;

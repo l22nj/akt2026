@@ -21,8 +21,28 @@ public class ArithAst {
         return tree;
     }
 
+    // ArithBaseVisitor ei sunni kõiki juhte vaatama, erinevalt ArithVisitor-ist
+    // Selle genereerib ANTLR ise
     private static int eval(ParseTree tree, Map<String, Integer> env) {
-        throw new UnsupportedOperationException();
+        var visitor = new ArithBaseVisitor<Integer>() {
+
+            @Override
+            public Integer visitExpr(ExprContext ctx) {
+                visit(ctx.expr());
+                return super.visitExpr(ctx);
+            }
+
+            @Override
+            public Integer visitTerm(TermContext ctx) {
+                return super.visitTerm(ctx);
+            }
+
+            @Override
+            public Integer visitFactor(FactorContext ctx) {
+                return super.visitFactor(ctx);
+            }
+        };
+        return visitor.visit(tree);
     }
 
     private static Node parseTreeToAst(ParseTree tree) {

@@ -9,4 +9,18 @@ grammar SimpleLausearvutus;
 //      ¬ & ∨ → ↔
 
 // Ära seda reeglit ümber nimeta, selle kaudu testitakse grammatikat
-init : 'implementeeri mind!' EOF;  // siit peab grammatika algama
+init : valem EOF;  // siit peab grammatika algama
+
+valem
+    : Muutuja
+    | '(' valem Operaator valem ')'
+    | '¬' valem
+    ;
+
+Operaator
+    : [¬&∨→↔]
+    ;
+
+Muutuja
+    : [XYZ]
+    ;

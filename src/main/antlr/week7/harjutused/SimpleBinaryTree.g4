@@ -17,4 +17,15 @@ grammar SimpleBinaryTree;
 // eeldame, et tühikuid ja tabulaatoreid võib olla igalpool suvaline arv
 
 // Ära seda reeglit ümber nimeta, selle kaudu testitakse grammatikat
-init : 'implementeeri mind!' EOF;  // siit peab grammatika algama
+init : node  EOF;  // siit peab grammatika algama
+
+node
+    : 'Node' '(' node ',' node ')'
+    | 'Leaf' '(' Arv ')'
+    ;
+
+Arv
+    : [01]
+    ;
+
+WS: [ \t\r\n]+ -> skip;
