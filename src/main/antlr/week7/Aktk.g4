@@ -10,99 +10,42 @@ statements
     ;
 
 statement
-    : ifStatement
+    : /*varDeclaration
+    | assignment
+    | ifStatement
     | whileStatement
-    | assignStatement
-    | variableDeclaration
-    | expression
-    | functionDefinition
+    | funDefinition
     | returnStatement
-    | blockStatement
+    |*/ exprStatement
+    | block           /*loogelistes sulgudes lausete jada*/
     ;
 
-blockStatement
+block
     : '{' statements '}'
     ;
 
-ifStatement
-    : 'if' expression 'then' thenStatement=statement 'else' elseStatement=statement
+exprStatement
+    : expr
     ;
 
-whileStatement
-    : 'while' expression 'do' statement
+expr
+    : simpleExpr
     ;
 
-returnStatement
-    : 'return' expression
+// Siia vahele operaatorid
+//plusExpr
+//    : left = plusExpr op='+' right=mulExpr
+//    | left=plusExpr op='-' right=mulExpr
+//    | mulExpr
+//    ;
+// AST veel vaja gteha
+
+simpleExpr
+    : IntLiteral    #IntLiteral
+    | StrLiteral    #StrLiteral
+    | Variable      #Variable
     ;
 
-assignStatement
-    : Identifier '=' expression
-    ;
-
-variableDeclaration
-    : 'var' VariableName=Identifier (':' VariableType=Identifier)? ('=' expression)?
-    ;
-
-functionDefinition
-    : 'fun' FunctionName=Identifier
-      '(' (ParameterName+=Identifier ':' ParameterType+=Identifier (',' ParameterName+=Identifier ':' ParameterType+=Identifier)*)? ')' ('->' ReturnType=Identifier)?
-      blockStatement
-    ;
-
-expression
-    : compareExpression
-    ;
-
-compareExpression
-    : sumExpression ('>'|'<'|'>='|'<='|'=='|'!=') sumExpression # BinaryCompare
-    | sumExpression                                             # SimpleCompare
-    ;
-
-sumExpression
-    : sumExpression ('+'|'-') termExpression # BinarySum
-    | termExpression                         # SimpleSum
-    ;
-
-termExpression
-    : termExpression ('*'|'/'|'%') factorExpression # BinaryTerm
-    | factorExpression                              # SimpleTerm
-    ;
-
-factorExpression
-    : '-' factorExpression # UnaryMinus
-    | callExpression       # SimpleFactor
-    ;
-
-callExpression
-    : Identifier '(' (expression (',' expression)*)? ')' # FunctionCall
-    | basicExpression                                    # SimpleCall
-    ;
-
-basicExpression
-    : Identifier         # Variable
-    | Integer            # IntegerLiteral
-    | String             # StringLiteral
-    | '(' expression ')' # Parenthesis
-    ;
-
-Identifier
-    : [a-zA-Z][a-zA-Z0-9_]*
-    ;
-
-Integer
-    : ('0'|[1-9][0-9]*)
-    ;
-
-String
-    : '"' ~["\n\r]* '"' // Tildega saab väljendada eitust.
-    ;                   // Siin ~["\n\r] tähistab suvalist tähte
-                        // mis pole jutumärk ega reavahetuse sümbol.
-
-Comment
-    : '/*' .*? '*/' -> skip
-    ;
-
-Whitespace
-    : [ \t\r\n]+ -> skip
-    ;
+IntLiteral: [0-9] | [1-9][0-9]+;
+StrLiteral: '"' ~["\n]* '"';
+Variable: [A-Za-z][A-Za-z0-9_]*;
