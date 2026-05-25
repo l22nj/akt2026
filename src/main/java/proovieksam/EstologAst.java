@@ -103,10 +103,10 @@ public class EstologAst {
                 }
             }
 
-            @Override
-            public EstologNode visitBinaryOp(BinaryOpContext ctx) {
-                return super.visitBinaryOp(ctx);
-            }
+//            @Override
+//            public EstologNode visitBinaryOp(BinaryOpContext ctx) {
+//                return super.visitBinaryOp(ctx);
+//            }
             //            @Override
 //            public EstologNode visitInit(InitContext ctx) {
 //                return visit(ctx.prog());

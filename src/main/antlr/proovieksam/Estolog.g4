@@ -19,7 +19,7 @@ avaldis
     | Muutuja   #Muutuja
     | '(' avaldis ')' #Sulud
     | left=avaldis op=ningOp right=avaldis   #BinOp
-    | left=avaldisPealeVordust op=vordusOp right=avaldisPealeVordust #VordusOp
+//    | left=avaldisPealeVordust op=vordusOp right=avaldisPealeVordust #VordusOp
 //    | kuiLause #KuiLause
     ;
 
