@@ -25,7 +25,7 @@ public class BologAstTest {
         legal("EIP", var("EIP"));
         illegal("X jura");
         illegal("x");
-        illegal("Kala");
+        illegal("week10/Kala");
     }
 
     @Test

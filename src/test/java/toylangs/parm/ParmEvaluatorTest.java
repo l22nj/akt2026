@@ -16,8 +16,8 @@ public class ParmEvaluatorTest {
     public void test01_const() {
         checkEval(10, lit(10));
         checkEval(22, plus(lit(10), lit(12)));
-        checkEval(36, up("Kala", lit(36)));
-        checkEval(49, plus(up("Koer", lit(13)), up("Kala", lit(36))));
+        checkEval(36, up("week10/Kala", lit(36)));
+        checkEval(49, plus(up("Koer", lit(13)), up("week10/Kala", lit(36))));
         checkEval(13, seq(lit(10), lit(13)));
         checkEval(15, plus(seq(lit(10), lit(13)), lit(2)));
     }

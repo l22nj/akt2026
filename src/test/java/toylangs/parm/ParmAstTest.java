@@ -15,7 +15,7 @@ public class ParmAstTest {
     @Test
     public void test01_basic() {
         legal("X", var("X"));
-        legal("Kala", var("Kala"));
+        legal("week10/Kala", var("week10/Kala"));
         legal("123", lit(123));
         legal("-00", lit(0));
         legal("-1", lit(-1));
@@ -83,7 +83,7 @@ public class ParmAstTest {
     @Test
     public void test07_examples() {
         // eraldi programmid
-        legal("Kala <- X + 5", up("Kala", plus(var("X"), lit(5))));
+        legal("Kala <- X + 5", up("week10/Kala", plus(var("X"), lit(5))));
         legal("1 ; 2", seq(lit(1), lit(2)));
         legal("X <- Y | Y <- X", par(up("X", var("Y")), up("Y", var("X"))));
         legal("3 + 3 ; (X <- 4) + 1", seq(plus(lit(3), lit(3)), plus(up("X", lit(4)), lit(1))));
@@ -94,7 +94,7 @@ public class ParmAstTest {
                         1 ; 2; A <- B <- 30;
                         (X <- Y | Y <- X);
                         3 + 3 ; (X <- -4) + 1""",
-                seq(seq(seq(seq(seq(seq(up("Kala", plus(var("X"), lit(5))), lit(1)), lit(2)), up("A", up("B", lit(30)))), par(up("X", var("Y")), up("Y", var("X")))), plus(lit(3), lit(3))), plus(up("X", lit(-4)), lit(1))));
+                seq(seq(seq(seq(seq(seq(up("week10/Kala", plus(var("X"), lit(5))), lit(1)), lit(2)), up("A", up("B", lit(30)))), par(up("X", var("Y")), up("Y", var("X")))), plus(lit(3), lit(3))), plus(up("X", lit(-4)), lit(1))));
     }
 
     private void legal(String input, ParmNode expectedAst) {

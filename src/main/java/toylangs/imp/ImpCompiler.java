@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.*;
 
+import static cma.instruction.CMaBasicInstruction.Code.*;
+import static cma.instruction.CMaIntInstruction.Code.*;
 import static toylangs.imp.ast.ImpNode.*;
 
 public class ImpCompiler {
@@ -21,8 +23,53 @@ public class ImpCompiler {
         return impCompiler.pw.toProgram();
     }
 
+    private final List<Character> vars = new ArrayList<>();
+
     private void compileNode(ImpNode node) {
-        throw new UnsupportedOperationException();
+        switch (node) {
+            // Iga case lükkab CMa masina magasinile väärtuse
+            case ImpNum impNum -> {
+                pw.visit(LOADC, impNum.value());
+            }
+            case ImpVar impVar -> {
+                char name = impVar.name();
+                var index = vars.indexOf(name);
+                if (index == -1) throw new NoSuchElementException();
+                pw.visit(LOADA, index);
+            }
+            case ImpAdd impAdd -> {
+                compileNode(impAdd.left());
+                compileNode(impAdd.right());
+                pw.visit(ADD);
+            }
+            case ImpDiv impDiv -> {
+                compileNode(impDiv.numerator());
+                compileNode(impDiv.denominator());
+                pw.visit(DIV);
+            }
+            case ImpAssign impAssign -> {
+                compileNode(impAssign.expr());
+                if (vars.contains(impAssign.name())) {
+                    var index = vars.indexOf(impAssign.name());
+                    pw.visit(STOREA, index);
+                    pw.visit(POP);
+                } else {
+                    vars.add(impAssign.name());
+                    // Siia rohkem midagi ei tule - miks?
+                }
+
+            }
+            case ImpNeg impNeg -> {
+                compileNode(impNeg.expr());
+                pw.visit(NEG);
+            }
+            case ImpProg impProg -> {
+                for (var assign : impProg.assigns()) {
+                    compileNode(assign);
+                }
+                compileNode(impProg.expr());
+            }
+        }
     }
 
     static void main() throws IOException {

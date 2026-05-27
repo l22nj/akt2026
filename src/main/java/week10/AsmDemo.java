@@ -8,7 +8,7 @@ import java.io.FileOutputStream;
 import static org.objectweb.asm.Opcodes.*;
 
 public class AsmDemo {
-    private static final String className = "Kala";
+    private static final String className = "week10/Kala";
 
     static void main() throws Exception {
         try (FileOutputStream out = new FileOutputStream(className + ".class")) {
