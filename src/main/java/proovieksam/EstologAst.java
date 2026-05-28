@@ -11,6 +11,7 @@ import utils.ExceptionErrorListener;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 import static proovieksam.EstologParser.*;
 import static proovieksam.ast.EstologNode.*;
@@ -53,28 +54,28 @@ public class EstologAst {
 
             @Override
             public EstologNode visitProg(ProgContext ctx) {
-                var definitsioonid = new ArrayList<EstologDef>();
-                for (var definitsioon : ctx.definitsioon()) {
-                    definitsioonid.add(visitDefinitsioon(definitsioon));
+                List<EstologDef> defs = new ArrayList<>();
+                for (DefContext defContext : ctx.def()) {
+                    defs.add(visitDef(defContext)); // otse õige visit kutse
                 }
-                var avaldis = visit(ctx.avaldis());
-                return EstologNode.prog(avaldis, definitsioonid);
+                EstologNode avaldis = visit(ctx.avaldis());
+                return prog(avaldis, defs);
             }
 
             @Override
-            public EstologDef visitDefinitsioon(DefinitsioonContext ctx) {
-                return EstologNode.def(ctx.Muutuja().getText(), visit(ctx.avaldis()));
+            public EstologDef visitDef(DefContext ctx) {
+                // täpsustatud tagastustüüp
+                return def(ctx.Muutuja().getText(), visit(ctx.avaldis()));
             }
 
             @Override
             public EstologNode visitLiteraal(LiteraalContext ctx) {
-                var väärtus = ctx.Arv().getText().equals("1");
-                return EstologNode.lit(väärtus);
+                return lit(ctx.getText().equals("1"));
             }
 
             @Override
             public EstologNode visitMuutuja(MuutujaContext ctx) {
-                return EstologNode.var(ctx.Muutuja().getText());
+                return var(ctx.getText());
             }
 
             @Override
@@ -84,46 +85,28 @@ public class EstologAst {
 
             @Override
             public EstologNode visitBinOp(BinOpContext ctx) {
-                var v = visit(ctx.left);
-                String op = ctx.op.getText();
-                var p = visit(ctx.right);
-
-                switch (op) {
-                    case ("JA"):
-                        return EstologNode.ja(v, p);
-
-                    case ("VOI"):
-                        return EstologNode.voi(v, p);
-
-                    case ("NING"):
-                        return EstologNode.ja(v, p);
-
-                    default:
-                        throw new UnsupportedOperationException("midagi valesti läinud:///");
-                }
+                EstologNode left = visit(ctx.getChild(0));
+                EstologNode right = visit(ctx.getChild(2));
+                return switch (ctx.getChild(1).getText()) {
+                    case "=" -> vordus(left, right);
+                    case "VOI" -> voi(left, right);
+                    case "JA", "NING" -> ja(left, right);
+                    default -> throw new UnsupportedOperationException();
+                };
             }
 
             @Override
-            public EstologNode visitBinaryOp(BinaryOpContext ctx) {
-                return super.visitBinaryOp(ctx);
+            public EstologNode visitKuiSiis(KuiSiisContext ctx) {
+                EstologNode kui = visit(ctx.avaldis(0));
+                EstologNode siis = visit(ctx.avaldis(1));
+                EstologNode muidu = null;
+                if (ctx.avaldis(2) != null) muidu = visit(ctx.avaldis(2));
+                return kui(kui, siis, muidu);
             }
-            //            @Override
-//            public EstologNode visitInit(InitContext ctx) {
-//                return visit(ctx.prog());
-//            }
-//
-//            @Override
-//            public EstologNode visitProg(ProgContext ctx) {
-//                return EstologNode.prog(ctx.avaldis(),);
-//            }
-//
-//            @Override
-//            public EstologNode visitAvaldis(AvaldisContext ctx) {
-//                String arvText = ctx.Literaal().getText();
-//                boolean arvValue = arvText.equals("1"); // grammatika lubab ainult 1 ja 0
-//                return EstologNode.lit(arvValue);
-//            }
+
+            // Lihtne käsitletakse BaseVisitor-is vaikimisi
         };
+
         return visitor.visit(tree);
     }
 }

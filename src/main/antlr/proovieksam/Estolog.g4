@@ -7,44 +7,29 @@ init : prog EOF;
 // Seda reeglit tuleb muuta / täiendada
 // (Ilmselt soovid ka defineerida uusi abireegleid)
 prog
-    : (definitsioon ';')* avaldis
+    : (def ';')* avaldis
     ;
 
-definitsioon
+def
     : Muutuja ':=' avaldis
     ;
 
 avaldis
-    : Arv       #Literaal
-    | Muutuja   #Muutuja
-    | '(' avaldis ')' #Sulud
-    | left=avaldis op=ningOp right=avaldis   #BinOp
-    | left=avaldisPealeVordust op=vordusOp right=avaldisPealeVordust #VordusOp
-//    | kuiLause #KuiLause
+    : avaldis 'JA' avaldis                              # BinOp
+    | avaldis 'VOI' avaldis                             # BinOp
+    | avaldis 'NING' avaldis                            # BinOp
+    | 'KUI' avaldis 'SIIS' avaldis ('MUIDU' avaldis)?   # KuiSiis
+    | lihtneAvaldis '=' lihtneAvaldis                   # BinOp
+    | lihtneAvaldis                                     # Lihtne
     ;
 
-vordusOp: '=';
-
-avaldisPealeVordust
-    : Arv
-    | Muutuja
-    | '(' avaldis ')'
-    | left=avaldis op=ningOp right=avaldis
+lihtneAvaldis
+    : Muutuja                                           # Muutuja
+    | Arv                                               # Literaal
+    | '(' avaldis ')'                                   # Sulud
     ;
 
-ningOp
-    : 'NING'
-    | 'VOI'
-    | 'JA'
-    ;
+Muutuja : [a-zA-Z]+;
+Arv : [01];
 
-// Operaatorid tuleks teha kihiliselt, läbilaskega. See on palju ohutum.
-// Võrduse saab kätte viies võrdusExpr otse edasi sulgude-expressioniks,
-// mitte mõlemale poole võrdusExpr ise.
-
-// Siin kõige kõrgema prioriteediga peaks olema kuiExpr
-
-Muutuja: [a-zA-Z]+;
-Arv: [01];
-
-WS: [ \t\r\n]+ -> skip;
+WS : [ \r\n\t] -> skip;
